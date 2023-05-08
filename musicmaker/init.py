@@ -1,0 +1,1 @@
+#Stripped down version of https://github.com/JamminCoder/music_maker
