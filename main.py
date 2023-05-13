@@ -19,7 +19,7 @@ def get_x_inputs(starting_point:int , ending_point:int , interval:float):
     return result_array
 
 def get_mathemathic_expression(variable_input):
-    mathemathic_expression = lambda x : 1
+    mathemathic_expression = lambda x : x**3
     return mathemathic_expression(variable_input)
 
 def mathemathic_function(inputs):
@@ -55,7 +55,8 @@ def turn_values_into_frequencies(function_results ,  lowest_frequency = 82.41 , 
 def tonify(frequency_array , frequency_duration):
     tone_array = []
     if min(frequency_array) == max(frequency_array):
-        Tone.sine(min(frequency_array) , 2)
+        tone = Tone(tone_frequency=min(freq_arrray) , tone_duration=2)
+        tone.sine(tone.tone_frequency ,tone.tone_duration , "l" )
         exit()
     for frequency in frequency_array:
         tone = Tone(frequency ,frequency_duration)
@@ -70,9 +71,9 @@ def tonify(frequency_array , frequency_duration):
 
 
 
-freq_arrray = turn_values_into_frequencies(mathemathic_function(get_x_inputs(-10 , 10 , 0.1)))
+freq_arrray = turn_values_into_frequencies(mathemathic_function(get_x_inputs(-5 , 5 , 0.2)))
 
-tone_tracks = tonify(freq_arrray , beat/8)
+tone_tracks = tonify(freq_arrray , beat/4)
 tone_tracks[0].play()
 
 
