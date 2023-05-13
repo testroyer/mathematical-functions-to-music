@@ -1,4 +1,8 @@
-import musicmaker
+import pygame
+pygame.init()
+
+from musicmaker.ToneTrack import ToneTrack
+from musicmaker.Tone import Tone
 
 BPM = 150
 beat = 60 / 150
@@ -7,15 +11,15 @@ def get_x_inputs(starting_point:int , ending_point:int , interval:float):
     result_array = [starting_point]
     current_point = starting_point
     while current_point < ending_point:
-        if (current_point + interval) > ending_point:
-            raise ValueError
+        # if (current_point + interval) > ending_point and current_point != ending_point:
+        #     raise ValueError
         current_point += interval
         result_array.append(current_point)
 
     return result_array
 
 def get_mathemathic_expression(variable_input):
-    mathemathic_expression = lambda x : x
+    mathemathic_expression = lambda x : x**2
     return mathemathic_expression(variable_input)
 
 def mathemathic_function(inputs):
@@ -44,8 +48,27 @@ def turn_values_into_frequencies(function_results ,  lowest_frequency = 82.41 , 
 
     return new_frequency_array
 
+def tonify(frequency_array , frequency_duration):
+    tone_array = []
+    for frequency in frequency_array:
+        tone = Tone(frequency ,frequency_duration)
+        tone_array.append(tone)
+    
+    tone_track_r = ToneTrack(tone_array , "r")
+    tone_track_l = ToneTrack(tone_array , "l")
+    
+    return [tone_track_r , tone_track_l]
 
 
 
 
-print(turn_values_into_frequencies(mathemathic_function(get_x_inputs(0 , 10 , 1)) , 20 , 120))
+
+freq_arrray = turn_values_into_frequencies(mathemathic_function(get_x_inputs(-10 , 10 , 0.1)))
+
+tone_tracks = tonify(freq_arrray , beat/8)
+tone_tracks[0].play()
+tone_tracks[1].play()
+
+
+tone_tracks[0].stop()
+tone_tracks[1].stop()
