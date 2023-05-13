@@ -49,6 +49,38 @@ class Tone:
         sound.play(loops = 1, maxtime=int(duration * one_sec))
         time.sleep(duration)
     
+    def sine(frequency, duration=1, speaker=None):
+        """
+        Play tone code taken and modified from https://stackoverflow.com/a/16268034
+        """
+
+        num_samples = int(round(duration * sample_rate))
+
+        #setup our numpy array to handle 16 bit ints, which is what we set our mixer to expect with "bits" up above
+        buf = numpy.zeros((num_samples, 2), dtype = numpy.int16)
+        amplitude = 2 ** (bits - 1) - 1
+
+        for s in range(num_samples):
+            t = float(s) / sample_rate    # time in seconds
+
+            sine = sine_x(amplitude, frequency, t)
+
+            # Control which speaker to play the sound from
+            if speaker == 'r':
+                buf[s][1] = sine # right
+            elif speaker == 'l':
+                buf[s][0] = sine # left
+
+            else:
+                buf[s][0] = sine # left
+                buf[s][1] = sine # right
+                
+
+        sound = pygame.sndarray.make_sound(buf)
+        one_sec = 1000 # Milliseconds
+        sound.play(loops = 1, maxtime=int(duration * one_sec))
+        time.sleep(duration)
+    
     @staticmethod
     def create_tone_from_list(frequency_array, duration=1):
         tone_threads = []

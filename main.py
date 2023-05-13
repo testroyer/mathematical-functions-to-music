@@ -5,7 +5,7 @@ from musicmaker.ToneTrack import ToneTrack
 from musicmaker.Tone import Tone
 
 BPM = 150
-beat = 60 / 150
+beat = 60 / BPM
 
 def get_x_inputs(starting_point:int , ending_point:int , interval:float):
     result_array = [starting_point]
@@ -19,7 +19,7 @@ def get_x_inputs(starting_point:int , ending_point:int , interval:float):
     return result_array
 
 def get_mathemathic_expression(variable_input):
-    mathemathic_expression = lambda x : x**2
+    mathemathic_expression = lambda x : 1
     return mathemathic_expression(variable_input)
 
 def mathemathic_function(inputs):
@@ -40,16 +40,23 @@ def turn_values_into_frequencies(function_results ,  lowest_frequency = 82.41 , 
     highest_value = max(function_results)
     lowest_value = min(function_results)
     value_interval = highest_value - lowest_value
-    frequency_interval = frequency_difference / value_interval
+    if value_interval != 0:
+        frequency_interval = frequency_difference / value_interval
 
     for result in function_results:
-        new_frequency = ((result-lowest_value)*frequency_interval) + lowest_frequency
+        if value_interval == 0:
+            new_frequency = highest_frequency
+        else:
+            new_frequency = ((result-lowest_value)*frequency_interval) + lowest_frequency
         new_frequency_array.append(new_frequency)
 
     return new_frequency_array
 
 def tonify(frequency_array , frequency_duration):
     tone_array = []
+    if min(frequency_array) == max(frequency_array):
+        Tone.sine(min(frequency_array) , 2)
+        exit()
     for frequency in frequency_array:
         tone = Tone(frequency ,frequency_duration)
         tone_array.append(tone)
@@ -67,8 +74,6 @@ freq_arrray = turn_values_into_frequencies(mathemathic_function(get_x_inputs(-10
 
 tone_tracks = tonify(freq_arrray , beat/8)
 tone_tracks[0].play()
-tone_tracks[1].play()
 
 
 tone_tracks[0].stop()
-tone_tracks[1].stop()
